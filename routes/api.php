@@ -14,12 +14,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+
+Route::post('/login','AuthController@login');
+Route::post('/register','AuthController@register');
+
+Route::group(['middleware'=>'auth:api'],function(){
+        Route::get('profile','UserController@profile');
+        Route::get('logout','AuthController@logout');
+        Route::put('update_info','UserController@update_info');
+        Route::put('update_password','UserController@update_password');
+        Route::post('upload','ProductController@upload');
+        Route::apiResource('users','UserController');
+        Route::apiResource('roles','RoleController');
+        Route::apiResource('products','ProductController');
+        Route::apiResource('orders','OrderController')->only('index','show');
+        Route::apiResource('permissions','PermissionController')->only('index','show');
+        Route::get('export','OrderController@export');
+        Route::get('chart','DashboardController@chart');
+
 });
-Route::get('/users','UserController@index')->name('users.index');
-Route::get('/users/{id}','UserController@show')->name('users.show');
-Route::post('/users','UserController@store')->name('users.store');
-Route::put('/users/{id}','UserController@update')->name('users.update');
-Route::delete('/users/{id}','UserController@update')->name('users.update');
+
+
+
+
 
